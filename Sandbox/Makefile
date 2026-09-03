@@ -85,8 +85,8 @@ endif
 GENERATED :=
 OBJECTS :=
 
-GENERATED += $(OBJDIR)/Application.o
-OBJECTS += $(OBJDIR)/Application.o
+GENERATED += $(OBJDIR)/SandboxApp.o
+OBJECTS += $(OBJDIR)/SandboxApp.o
 
 # Rules
 # #############################################
@@ -150,7 +150,7 @@ endif
 # File Rules
 # #############################################
 
-$(OBJDIR)/Application.o: src/Application.cpp
+$(OBJDIR)/SandboxApp.o: src/SandboxApp.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
