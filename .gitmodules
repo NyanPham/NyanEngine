@@ -1,0 +1,3 @@
+[submodule "NyanEngine/vendor/spdlog"]
+	path = NyanEngine/vendor/spdlog
+	url = https://github.com/gabime/spdlog

@@ -19,6 +19,10 @@ project "NyanEngine"
       "%{prj.name}/src/**.cpp"
    }
 
+   includedirs {
+      "NyanEngine/vendor/spdlog/include"
+   }
+
    defines {
       "NYAN_PLATFORM_WINDOWS",
       "NYAN_BUILD_DLL"
@@ -48,7 +52,8 @@ project "Sandbox"
    }
 
    includedirs {
-      "NyanEngine/src"
+      "NyanEngine/src",
+      "NyanEngine/vendor/spdlog/include"
    }
 
    links {
