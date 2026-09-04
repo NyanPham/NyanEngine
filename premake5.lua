@@ -20,13 +20,24 @@ project "NyanEngine"
    }
 
    includedirs {
-      "NyanEngine/vendor/spdlog/include"
+      "%{prj.name}/vendor/spdlog/include"
    }
 
-   defines {
-      "NYAN_PLATFORM_WINDOWS",
-      "NYAN_BUILD_DLL"
-   }
+   filter "system:windows"
+      cppdialect "C++17"
+      staticruntime "On"
+      systemversion "latest"
+
+      defines {
+         "NYAN_PLATFORM_WINDOWS",
+         "NYAN_BUILD_DLL"
+      }
+
+      postbuildcommands
+      {
+         ("if not exist \"../bin/" .. outputdir .. "/Sandbox\" mkdir \"../bin/" .. outputdir .. "/Sandbox\""),         
+         ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+      }
 
    filter "configurations:Debug"
       defines "NYAN_DEBUG"
@@ -34,6 +45,10 @@ project "NyanEngine"
 
    filter "configurations:Release"
       defines "NYAN_RELEASE"
+      optimize "On"
+
+   filter "configurations:Dist"
+      defines "NYAN_DIST"
       optimize "On"
 
 project "Sandbox"
@@ -60,9 +75,14 @@ project "Sandbox"
       "NyanEngine"
    }
 
-   defines {
-      "NYAN_PLATFORM_WINDOWS"
-   }
+   filter "system:windows"
+      cppdialect "C++17"
+      staticruntime "On"
+      systemversion "latest"
+
+      defines {
+         "NYAN_PLATFORM_WINDOWS"
+      }
 
    filter "configurations:Debug"
       defines "NYAN_DEBUG"
@@ -70,4 +90,8 @@ project "Sandbox"
 
    filter "configurations:Release"
       defines "NYAN_RELEASE"
+      optimize "On"
+
+   filter "configurations:Dist"
+      defines "NYAN_DIST"
       optimize "On"

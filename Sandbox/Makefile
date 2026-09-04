@@ -66,9 +66,9 @@ else ifeq ($(config),dist)
 TARGETDIR = ../bin/Dist-windows-x86_64/Sandbox
 TARGET = $(TARGETDIR)/Sandbox.exe
 OBJDIR = ../bin-int/Dist-windows-x86_64/Sandbox
-DEFINES += -DNYAN_PLATFORM_WINDOWS
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -std=c++17
+DEFINES += -DNYAN_PLATFORM_WINDOWS -DNYAN_DIST
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
 LIBS += ../bin/Dist-windows-x86_64/NyanEngine/NyanEngine.lib
 LDDEPS += ../bin/Dist-windows-x86_64/NyanEngine/NyanEngine.lib
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s

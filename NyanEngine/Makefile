@@ -39,8 +39,6 @@ define PREBUILDCMDS
 endef
 define PRELINKCMDS
 endef
-define POSTBUILDCMDS
-endef
 
 ifeq ($(config),debug)
 TARGETDIR = ../bin/Debug-windows-x86_64/NyanEngine
@@ -50,6 +48,11 @@ DEFINES += -DNYAN_PLATFORM_WINDOWS -DNYAN_BUILD_DLL -DNYAN_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -shared -Wl,--out-implib="../bin/Debug-windows-x86_64/NyanEngine/NyanEngine.lib"
+define POSTBUILDCMDS
+	@echo Running postbuild commands
+	if not exist "../bin/Debug-windows-x86_64/Sandbox" mkdir "../bin/Debug-windows-x86_64/Sandbox"
+	IF EXIST ..\bin\Debug-windows-x86_64\NyanEngine\NyanEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\NyanEngine\NyanEngine.dll ..\bin\Debug-windows-x86_64\Sandbox > nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\NyanEngine\NyanEngine.dll ..\bin\Debug-windows-x86_64\Sandbox > nul)
+endef
 
 else ifeq ($(config),release)
 TARGETDIR = ../bin/Release-windows-x86_64/NyanEngine
@@ -59,15 +62,25 @@ DEFINES += -DNYAN_PLATFORM_WINDOWS -DNYAN_BUILD_DLL -DNYAN_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -shared -Wl,--out-implib="../bin/Release-windows-x86_64/NyanEngine/NyanEngine.lib" -s
+define POSTBUILDCMDS
+	@echo Running postbuild commands
+	if not exist "../bin/Release-windows-x86_64/Sandbox" mkdir "../bin/Release-windows-x86_64/Sandbox"
+	IF EXIST ..\bin\Release-windows-x86_64\NyanEngine\NyanEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\NyanEngine\NyanEngine.dll ..\bin\Release-windows-x86_64\Sandbox > nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\NyanEngine\NyanEngine.dll ..\bin\Release-windows-x86_64\Sandbox > nul)
+endef
 
 else ifeq ($(config),dist)
 TARGETDIR = ../bin/Dist-windows-x86_64/NyanEngine
 TARGET = $(TARGETDIR)/NyanEngine.dll
 OBJDIR = ../bin-int/Dist-windows-x86_64/NyanEngine
-DEFINES += -DNYAN_PLATFORM_WINDOWS -DNYAN_BUILD_DLL
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -std=c++17
+DEFINES += -DNYAN_PLATFORM_WINDOWS -DNYAN_BUILD_DLL -DNYAN_DIST
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -shared -Wl,--out-implib="../bin/Dist-windows-x86_64/NyanEngine/NyanEngine.lib" -s
+define POSTBUILDCMDS
+	@echo Running postbuild commands
+	if not exist "../bin/Dist-windows-x86_64/Sandbox" mkdir "../bin/Dist-windows-x86_64/Sandbox"
+	IF EXIST ..\bin\Dist-windows-x86_64\NyanEngine\NyanEngine.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\NyanEngine\NyanEngine.dll ..\bin\Dist-windows-x86_64\Sandbox > nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\NyanEngine\NyanEngine.dll ..\bin\Dist-windows-x86_64\Sandbox > nul)
+endef
 
 endif
 
