@@ -4,10 +4,13 @@
 #include "Nyan/Events/ApplicationEvent.h"
 #include "Nyan/Log.h"
 
+#include <GLFW/glfw3.h>
+
 namespace Nyan
 {
     Application::Application()
     {
+        m_Window = std::unique_ptr<Window>(Window::Create());
     }
 
     Application::~Application()
@@ -16,17 +19,12 @@ namespace Nyan
 
     void Application::Run()
     {
-        WindowResizeEvent e(1280, 720);
-        if (e.IsInCategory(EventCategoryApplication))
-        {
-            NYAN_TRACE(e);
-        }
-        if (e.IsInCategory(EventCategoryInput))
-        {
-            NYAN_TRACE(e);
-        }
 
-        while (true)
-            ;
+        while (m_Running)
+        {
+            glClearColor(1, 0, 1, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
+            m_Window->OnUpdate();
+        }
     }
 }

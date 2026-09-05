@@ -4,6 +4,12 @@ workspace "NyanEngine"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+-- Include directories relative to root folder (solution directory)
+IncludeDir = {}
+IncludeDir["GLFW"] = "NyanEngine/vendor/GLFW/include"
+
+include "NyanEngine/vendor/GLFW"
+
 project "NyanEngine"
    location "NyanEngine"
    kind "SharedLib"
@@ -24,8 +30,16 @@ project "NyanEngine"
 
    includedirs {
       "%{prj.name}/src",
-      "%{prj.name}/vendor/spdlog/include"
+      "%{prj.name}/vendor/spdlog/include",
+      "%{IncludeDir.GLFW}"
    }
+   
+   links 
+	{ 
+		"GLFW",
+		"opengl32",
+      "gdi32"
+	}
 
    filter "system:windows"
       cppdialect "C++17"

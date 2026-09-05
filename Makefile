@@ -9,14 +9,17 @@ ifndef verbose
 endif
 
 ifeq ($(config),debug)
+  GLFW_config = debug
   NyanEngine_config = debug
   Sandbox_config = debug
 
 else ifeq ($(config),release)
+  GLFW_config = release
   NyanEngine_config = release
   Sandbox_config = release
 
 else ifeq ($(config),dist)
+  GLFW_config = dist
   NyanEngine_config = dist
   Sandbox_config = dist
 
@@ -24,13 +27,19 @@ else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := NyanEngine Sandbox
+PROJECTS := GLFW NyanEngine Sandbox
 
 .PHONY: all clean help $(PROJECTS) 
 
 all: $(PROJECTS)
 
-NyanEngine:
+GLFW:
+ifneq (,$(GLFW_config))
+	@echo "==== Building GLFW ($(GLFW_config)) ===="
+	@${MAKE} --no-print-directory -C NyanEngine/vendor/GLFW -f Makefile config=$(GLFW_config)
+endif
+
+NyanEngine: GLFW
 ifneq (,$(NyanEngine_config))
 	@echo "==== Building NyanEngine ($(NyanEngine_config)) ===="
 	@${MAKE} --no-print-directory -C NyanEngine -f Makefile config=$(NyanEngine_config)
@@ -43,6 +52,7 @@ ifneq (,$(Sandbox_config))
 endif
 
 clean:
+	@${MAKE} --no-print-directory -C NyanEngine/vendor/GLFW -f Makefile clean
 	@${MAKE} --no-print-directory -C NyanEngine -f Makefile clean
 	@${MAKE} --no-print-directory -C Sandbox -f Makefile clean
 
@@ -57,6 +67,7 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
+	@echo "   GLFW"
 	@echo "   NyanEngine"
 	@echo "   Sandbox"
 	@echo ""

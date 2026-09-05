@@ -1,3 +1,6 @@
 [submodule "NyanEngine/vendor/spdlog"]
 	path = NyanEngine/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "NyanEngine/vendor/GLFW"]
+	path = NyanEngine/vendor/GLFW
+	url = https://github.com/TheCherno/GLFW
