@@ -1,3 +1,4 @@
+#include "nyanpch.h"
 #include "Application.h"
 
 #include "Nyan/Events/ApplicationEvent.h"

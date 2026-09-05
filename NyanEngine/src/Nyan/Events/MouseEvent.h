@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace Nyan
 {
     class NYAN_API MouseMovedEvent : public Event

@@ -1,11 +1,8 @@
 #pragma once
 
+#include "nyanpch.h"
 #include "Nyan/Core.h"
-
 #include "spdlog/fmt/fmt.h"
-
-#include <string>
-#include <functional>
 
 namespace Nyan
 {

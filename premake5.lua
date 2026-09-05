@@ -14,6 +14,9 @@ project "NyanEngine"
    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+   pchheader "nyanpch.h"
+   pchsource "NyanEngine/src/nyanpch.cpp"
+
    files {
       "%{prj.name}/src/**.h",
       "%{prj.name}/src/**.cpp"
