@@ -4,3 +4,6 @@
 [submodule "NyanEngine/vendor/GLFW"]
 	path = NyanEngine/vendor/GLFW
 	url = https://github.com/TheCherno/GLFW
+[submodule "NyanEngine/vendor/imgui"]
+	path = NyanEngine/vendor/imgui
+	url = https://github.com/TheCherno/imgui

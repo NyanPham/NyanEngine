@@ -31,7 +31,7 @@ RESCOMP = windres
 PCH = src/nyanpch.h
 PCH_PLACEHOLDER = $(OBJDIR)/$(notdir $(PCH))
 GCH = $(PCH_PLACEHOLDER).gch
-INCLUDES += -Isrc -Ivendor/spdlog/include -Ivendor/GLFW/include -Ivendor/Glad/include
+INCLUDES += -Isrc -Ivendor/spdlog/include -Ivendor/GLFW/include -Ivendor/Glad/include -Ivendor/imgui
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -48,8 +48,8 @@ OBJDIR = ../bin-int/Debug-windows-x86_64/NyanEngine
 DEFINES += -DNYAN_PLATFORM_WINDOWS -DNYAN_BUILD_DLL -DNYAN_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
-LIBS += vendor/GLFW/bin/Debug-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Debug-windows-x86_64/Glad/Glad.lib -lopengl32 -lgdi32
-LDDEPS += vendor/GLFW/bin/Debug-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Debug-windows-x86_64/Glad/Glad.lib
+LIBS += vendor/GLFW/bin/Debug-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Debug-windows-x86_64/Glad/Glad.lib vendor/imgui/bin/Debug-windows-x86_64/ImGui/ImGui.lib -lopengl32 -lgdi32
+LDDEPS += vendor/GLFW/bin/Debug-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Debug-windows-x86_64/Glad/Glad.lib vendor/imgui/bin/Debug-windows-x86_64/ImGui/ImGui.lib
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -shared -Wl,--out-implib="../bin/Debug-windows-x86_64/NyanEngine/NyanEngine.lib"
 define POSTBUILDCMDS
 	@echo Running postbuild commands
@@ -64,8 +64,8 @@ OBJDIR = ../bin-int/Release-windows-x86_64/NyanEngine
 DEFINES += -DNYAN_PLATFORM_WINDOWS -DNYAN_BUILD_DLL -DNYAN_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
-LIBS += vendor/GLFW/bin/Release-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Release-windows-x86_64/Glad/Glad.lib -lopengl32 -lgdi32
-LDDEPS += vendor/GLFW/bin/Release-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Release-windows-x86_64/Glad/Glad.lib
+LIBS += vendor/GLFW/bin/Release-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Release-windows-x86_64/Glad/Glad.lib vendor/imgui/bin/Release-windows-x86_64/ImGui/ImGui.lib -lopengl32 -lgdi32
+LDDEPS += vendor/GLFW/bin/Release-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Release-windows-x86_64/Glad/Glad.lib vendor/imgui/bin/Release-windows-x86_64/ImGui/ImGui.lib
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -shared -Wl,--out-implib="../bin/Release-windows-x86_64/NyanEngine/NyanEngine.lib" -s
 define POSTBUILDCMDS
 	@echo Running postbuild commands
@@ -80,8 +80,8 @@ OBJDIR = ../bin-int/Dist-windows-x86_64/NyanEngine
 DEFINES += -DNYAN_PLATFORM_WINDOWS -DNYAN_BUILD_DLL -DNYAN_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
-LIBS += vendor/GLFW/bin/Dist-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Dist-windows-x86_64/Glad/Glad.lib -lopengl32 -lgdi32
-LDDEPS += vendor/GLFW/bin/Dist-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Dist-windows-x86_64/Glad/Glad.lib
+LIBS += vendor/GLFW/bin/Dist-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Dist-windows-x86_64/Glad/Glad.lib vendor/imgui/bin/Dist-windows-x86_64/ImGui/ImGui.lib -lopengl32 -lgdi32
+LDDEPS += vendor/GLFW/bin/Dist-windows-x86_64/GLFW/GLFW.lib vendor/Glad/bin/Dist-windows-x86_64/Glad/Glad.lib vendor/imgui/bin/Dist-windows-x86_64/ImGui/ImGui.lib
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -shared -Wl,--out-implib="../bin/Dist-windows-x86_64/NyanEngine/NyanEngine.lib" -s
 define POSTBUILDCMDS
 	@echo Running postbuild commands
@@ -102,12 +102,16 @@ GENERATED :=
 OBJECTS :=
 
 GENERATED += $(OBJDIR)/Application.o
+GENERATED += $(OBJDIR)/ImGuiLayer.o
+GENERATED += $(OBJDIR)/ImGuiOpenGLRenderer.o
 GENERATED += $(OBJDIR)/Layer.o
 GENERATED += $(OBJDIR)/LayerStack.o
 GENERATED += $(OBJDIR)/Log.o
 GENERATED += $(OBJDIR)/WindowsWindow.o
 GENERATED += $(OBJDIR)/nyanpch.o
 OBJECTS += $(OBJDIR)/Application.o
+OBJECTS += $(OBJDIR)/ImGuiLayer.o
+OBJECTS += $(OBJDIR)/ImGuiOpenGLRenderer.o
 OBJECTS += $(OBJDIR)/Layer.o
 OBJECTS += $(OBJDIR)/LayerStack.o
 OBJECTS += $(OBJDIR)/Log.o
@@ -179,6 +183,9 @@ endif
 $(OBJDIR)/Application.o: src/Nyan/Application.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ImGuiLayer.o: src/Nyan/ImGui/ImGuiLayer.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Layer.o: src/Nyan/Layer.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -186,6 +193,9 @@ $(OBJDIR)/LayerStack.o: src/Nyan/LayerStack.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Log.o: src/Nyan/Log.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ImGuiOpenGLRenderer.o: src/Platform/OpenGL/ImGuiOpenGLRenderer.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/WindowsWindow.o: src/Platform/Windows/WindowsWindow.cpp
