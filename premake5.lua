@@ -7,8 +7,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "NyanEngine/vendor/GLFW/include"
+IncludeDir["Glad"] = "NyanEngine/vendor/Glad/include"
 
 include "NyanEngine/vendor/GLFW"
+include "NyanEngine/vendor/Glad"
 
 project "NyanEngine"
    location "NyanEngine"
@@ -31,12 +33,14 @@ project "NyanEngine"
    includedirs {
       "%{prj.name}/src",
       "%{prj.name}/vendor/spdlog/include",
-      "%{IncludeDir.GLFW}"
+      "%{IncludeDir.GLFW}",
+      "%{IncludeDir.Glad}"
    }
    
    links 
 	{ 
 		"GLFW",
+      "Glad",
 		"opengl32",
       "gdi32"
 	}

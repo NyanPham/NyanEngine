@@ -10,16 +10,19 @@ endif
 
 ifeq ($(config),debug)
   GLFW_config = debug
+  Glad_config = debug
   NyanEngine_config = debug
   Sandbox_config = debug
 
 else ifeq ($(config),release)
   GLFW_config = release
+  Glad_config = release
   NyanEngine_config = release
   Sandbox_config = release
 
 else ifeq ($(config),dist)
   GLFW_config = dist
+  Glad_config = dist
   NyanEngine_config = dist
   Sandbox_config = dist
 
@@ -27,7 +30,7 @@ else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := GLFW NyanEngine Sandbox
+PROJECTS := GLFW Glad NyanEngine Sandbox
 
 .PHONY: all clean help $(PROJECTS) 
 
@@ -39,7 +42,13 @@ ifneq (,$(GLFW_config))
 	@${MAKE} --no-print-directory -C NyanEngine/vendor/GLFW -f Makefile config=$(GLFW_config)
 endif
 
-NyanEngine: GLFW
+Glad:
+ifneq (,$(Glad_config))
+	@echo "==== Building Glad ($(Glad_config)) ===="
+	@${MAKE} --no-print-directory -C NyanEngine/vendor/Glad -f Makefile config=$(Glad_config)
+endif
+
+NyanEngine: GLFW Glad
 ifneq (,$(NyanEngine_config))
 	@echo "==== Building NyanEngine ($(NyanEngine_config)) ===="
 	@${MAKE} --no-print-directory -C NyanEngine -f Makefile config=$(NyanEngine_config)
@@ -53,6 +62,7 @@ endif
 
 clean:
 	@${MAKE} --no-print-directory -C NyanEngine/vendor/GLFW -f Makefile clean
+	@${MAKE} --no-print-directory -C NyanEngine/vendor/Glad -f Makefile clean
 	@${MAKE} --no-print-directory -C NyanEngine -f Makefile clean
 	@${MAKE} --no-print-directory -C Sandbox -f Makefile clean
 
@@ -68,6 +78,7 @@ help:
 	@echo "   all (default)"
 	@echo "   clean"
 	@echo "   GLFW"
+	@echo "   Glad"
 	@echo "   NyanEngine"
 	@echo "   Sandbox"
 	@echo ""
